@@ -1,0 +1,25 @@
+{
+	"name": "rinha-backend-ryangst",
+	"module": "index.ts",
+	"type": "module",
+	"private": true,
+	"scripts": {
+		"up": "docker compose up --build -d",
+		"down": "docker compose down",
+		"lint": "biome check --write",
+		"pretest": "cp .env.example .env",
+		"test": "bun test"
+	},
+	"workspaces": [
+		"packages/*",
+		"apps/*"
+	],
+	"devDependencies": {
+		"@biomejs/biome": "2.0.5",
+		"@types/bun": "latest",
+		"lefthook": "1.11.14"
+	},
+	"peerDependencies": {
+		"typescript": "^5"
+	}
+}
