@@ -6,8 +6,10 @@
 		"dev": "bun run --watch src/index.ts"
 	},
 	"dependencies": {
+		"@repo/redis": "workspace:*",
+		"bullmq": "^5.56.1",
 		"elysia": "latest",
-		"@repo/redis": "workspace:*"
+		"mongoose": "^8.16.2"
 	},
 	"devDependencies": {
 		"bun-types": "latest"

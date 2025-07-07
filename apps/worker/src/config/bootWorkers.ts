@@ -9,9 +9,9 @@ const workerOptions: WorkerOptions = {
 }
 
 export async function bootWorkers() {
-	const imageProcessingWorker = new Worker(queueName['image-processing'], async () => {}, workerOptions)
+	const paymentsWorker = new Worker(queueName.payments, async () => {}, workerOptions)
 
-	const workers = [imageProcessingWorker]
+	const workers = [paymentsWorker]
 
 	workers.forEach((worker) => {
 		worker.on('error', (error) => {
