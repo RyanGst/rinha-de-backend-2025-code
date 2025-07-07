@@ -11,7 +11,9 @@
 	},
 	"dependencies": {
 		"@repo/redis": "workspace:*",
-		"bullmq": "^5.56.1"
+		"@sinclair/typebox": "^0.34.37",
+		"bullmq": "^5.56.1",
+		"mongoose": "^8.16.2"
 	},
 	"scripts": {
 		"pretest": "cp .env.example .env",

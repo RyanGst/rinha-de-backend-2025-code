@@ -61,8 +61,8 @@ services:
       - /app/node_modules
     environment:
       - REDIS_URL=${REDIS_URL:-redis://redis:6379}
-      - PAYMENT_PROCESSOR_URL_DEFAULT=http://payment-processor-default:8080
-      - PAYMENT_PROCESSOR_URL_FALLBACK=http://payment-processor-fallback:8080
+      - PAYMENT_PROCESSOR_URL_DEFAULT=${PAYMENT_PROCESSOR_URL_DEFAULT:-http://payment-processor-default:8080}
+      - PAYMENT_PROCESSOR_URL_FALLBACK=${PAYMENT_PROCESSOR_URL_FALLBACK:-http://payment-processor-fallback:8080}
 
   bullboard:
     container_name: bullboard-rinha
