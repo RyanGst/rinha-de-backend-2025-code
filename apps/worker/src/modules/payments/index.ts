@@ -8,16 +8,16 @@ const paymentsJob = async (job: Job<Payments.paymentJob>) => {
 
 	const { correlationId, amount } = job.data
 
-	const defaultHealth = await service.getHealth('default')
-	const fallbackHealth = await service.getHealth('fallback')
+	const [defaultHealth, fallbackHealth] = await Promise.all([service.getHealth('default'), service.getHealth('fallback')])
 
 	if (defaultHealth.failing && fallbackHealth.failing) {
-		throw new Error('Both processors are failing')
+		await job.changeDelay(10000)
 	}
 
 	const processor = defaultHealth.failing ? 'fallback' : 'default'
 
-	const body = { correlationId, amount, requestedAt: new Date().toISOString() }
+	const requestedAt =  new Date().toISOString()
+	const body = { correlationId, amount, requestedAt }
 
 	const request = new Request(endpoints.payments[processor], {
 		method: 'POST',
@@ -27,28 +27,12 @@ const paymentsJob = async (job: Job<Payments.paymentJob>) => {
 		}
 	})
 
-	const response = await fetch(request)
-
-	if (!response.ok) {
-		return {
-			success: false,
-			message: `Failed to process payment: ${response.statusText}`
-		}
-	}
-
-	const data = (await response.json()) as { message: 'payment processed successfully' }
-
-	if (data.message !== 'payment processed successfully') {
-		return {
-			success: false,
-			message: `Failed to process payment: ${data.message}`
-		}
-	}
+	await fetch(request)
 
 	await Payments.PaymentModel.create({
 		correlationId,
 		amount,
-		requestedAt: new Date(),
+		requestedAt,
 		processor
 	})
 

@@ -113,6 +113,8 @@ export async function resetBackendDatabase() {
 export async function getBackendPaymentsSummary(from, to) {
 	const response = await backendHttp.asyncGet(`/payments-summary?from=${from}&to=${to}`)
 
+	console.log(`/payments-summary?from=${from}&to=${to}`)
+	console.log(response.status)
 	if (response.status != 200) {
 		exec.test.abort(`Erro ao obter admin payments summary do backend (HTTP ${response.status}).`)
 	}

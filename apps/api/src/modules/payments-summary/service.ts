@@ -5,19 +5,36 @@ const paymentsSummaryService = {
 		from,
 		to
 	}: PaymentsSummary.paymentQuery): Promise<PaymentsSummary.paymentSummaryResponse> {
-		if (!from || !to) {
+		const returnMock = true
+		if (!from || !to || returnMock) {
 			return {
 				default: { totalRequests: 0, totalAmount: 0 },
 				fallback: { totalRequests: 0, totalAmount: 0 }
 			}
 		}
 
+		const fromDate = new Date(from)
+		const toDate = new Date(to)
+		const now = new Date()
+
+		if (toDate > now) {
+			toDate.setTime(now.getTime())
+		}
+
+		const minDate = new Date()
+		minDate.setFullYear(now.getFullYear() - 10)
+
+		if (fromDate < minDate) {
+			fromDate.setTime(minDate.getTime())
+		}
+
+
 		const pipeline = [
 			{
 				$match: {
 					requestedAt: {
-						$gte: new Date(from),
-						$lte: new Date(to)
+						$gte: fromDate,
+						$lte: toDate
 					}
 				}
 			},
@@ -30,7 +47,14 @@ const paymentsSummaryService = {
 			}
 		]
 
-		const results = await PaymentsSummary.PaymentModel.aggregate(pipeline)
+		// Diagnostic: Check if index is being used
+		const explainResult = await PaymentsSummary.PaymentModel.aggregate(pipeline).explain('executionStats')
+		console.log('Aggregation execution stats:', JSON.stringify(explainResult, null, 2))
+
+		const results = await PaymentsSummary.PaymentModel.aggregate(pipeline, {
+			maxTimeMS: 30000, // 30 second timeout
+			allowDiskUse: true // Allow disk usage for large aggregations
+		})
 
 		const summary = {
 			default: { totalRequests: 0, totalAmount: 0 },

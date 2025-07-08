@@ -22,8 +22,14 @@ export namespace PaymentsSummary {
 		processor: { type: String, required: true }
 	})
 
+	// Compound index for aggregation performance
+	paymentSchema.index({ requestedAt: 1, processor: 1 })
+
 	export type PaymentRecord = mongoose.InferSchemaType<typeof paymentSchema>
 	export const PaymentModel = mongoose.model<PaymentRecord>('Payment', paymentSchema)
+
+	// Ensure indexes are created
+	PaymentModel.syncIndexes().catch(console.error)
 
 	/**
      * "default" : {

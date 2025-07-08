@@ -9,6 +9,7 @@
 		"@repo/redis": "workspace:*",
 		"bullmq": "^5.56.1",
 		"elysia": "latest",
+		"logixlysia": "^5.1.0",
 		"mongoose": "^8.16.2"
 	},
 	"devDependencies": {
