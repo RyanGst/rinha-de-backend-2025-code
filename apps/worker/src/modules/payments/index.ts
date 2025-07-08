@@ -30,14 +30,19 @@ const paymentsJob = async (job: Job<Payments.paymentJob>) => {
     const response = await fetch(request)
     
     if (!response.ok) {
-        throw new Error('Failed to process payment')
+        return {
+            success: false,
+            message: `Failed to process payment: ${response.statusText}`
+        }
     }
 
     const data = await response.json() as { message: "payment processed successfully" }
 
-    
     if (data.message !== "payment processed successfully") {
-        throw new Error('Failed to process payment')
+        return {
+            success: false,
+            message: `Failed to process payment: ${data.message}`
+        }
     }
 
     await Payments.PaymentModel.create({
@@ -47,8 +52,10 @@ const paymentsJob = async (job: Job<Payments.paymentJob>) => {
         processor
     })
 
-    console.log('Payment processed successfully');
-
+    return {
+        success: true,
+        message: 'Payment processed successfully'
+    }
 }
 
 export default paymentsJob

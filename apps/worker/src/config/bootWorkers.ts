@@ -1,5 +1,6 @@
-import { getRedisClient, queueName } from '@repo/redis'
-import { Worker, type WorkerOptions } from 'bullmq'
+import {getRedisClient, queueName} from '@repo/redis'
+import {Worker, type WorkerOptions} from 'bullmq'
+import paymentsJob from "../modules/payments";
 
 const { host, port } = getRedisClient()
 
@@ -8,8 +9,10 @@ const workerOptions: WorkerOptions = {
 	concurrency: Number.parseInt(process.env.CONCURRENCY || '1', 10)
 }
 
+
+
 export async function bootWorkers() {
-	const paymentsWorker = new Worker(queueName.payments, async () => {}, workerOptions)
+	const paymentsWorker = new Worker(queueName.payments, paymentsJob, workerOptions)
 
 	const workers = [paymentsWorker]
 

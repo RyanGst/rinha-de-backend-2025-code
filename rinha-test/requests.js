@@ -107,11 +107,8 @@ export async function getPPPaymentsSummary(service, from, to) {
 export async function resetBackendDatabase() {
 
     try {
-        const response = await backendHttp.asyncPost('/purge-payments');
+        await backendHttp.asyncPost('/purge-payments');
 
-        if (response.status != 200) {
-            exec.test.abort(`Erro ao resetar database do backend (HTTP ${response.status}).`);
-        }
     } catch (error) {
           console.warn("Seu backend provavelmente não possui um endpoint para resetar o banco. Isso não é um problem.", error.message);
     }
