@@ -1,3 +1,3 @@
 export const queueName = {
-	'payments': 'payments'
+	payments: 'payments'
 }

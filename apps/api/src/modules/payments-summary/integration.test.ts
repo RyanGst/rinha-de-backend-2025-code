@@ -1,23 +1,23 @@
-import { describe, expect, it } from "bun:test";
-import { app } from "../..";
+import { describe, expect, it } from 'bun:test'
+import { app } from '../..'
 
 describe('Payments', () => {
-    it('should dispatch a payment', async () => {
-        const payment = {
-            amount: 100,
-            correlationId: Bun.randomUUIDv7()
-        }
+	it('should dispatch a payment', async () => {
+		const payment = {
+			amount: 100,
+			correlationId: Bun.randomUUIDv7()
+		}
 
-        const request = new Request('http://localhost:9999/payments', {
-            method: 'POST',
-            body: JSON.stringify(payment),
-            headers: {  
-                'Content-Type': 'application/json'
-            }
-        })
+		const request = new Request('http://localhost:9999/payments', {
+			method: 'POST',
+			body: JSON.stringify(payment),
+			headers: {
+				'Content-Type': 'application/json'
+			}
+		})
 
-        const response = await app.handle(request)
+		const response = await app.handle(request)
 
-        expect(response.status).toBe(200)
-    })
+		expect(response.status).toBe(200)
+	})
 })
