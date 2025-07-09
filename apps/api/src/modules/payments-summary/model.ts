@@ -2,8 +2,8 @@ import { t } from 'elysia'
 
 export namespace PaymentsSummary {
 	export const paymentQuery = t.Object({
-		from: t.String(),
-		to: t.String()
+		from: t.Optional(t.String()),
+		to: t.Optional(t.String())
 	})
 
 	export type paymentQuery = typeof paymentQuery.static

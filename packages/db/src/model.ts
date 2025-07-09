@@ -14,8 +14,15 @@ const paymentSchema = new mongoose.Schema<_PaymentRecord>({
 	processor: { type: String, required: true }
 })
 
-// Compound index for aggregation performance
-paymentSchema.index({ requestedAt: 1, processor: 1 })
+paymentSchema.index(
+	{ requestedAt: 1, processor: 1 },
+	{
+		background: true,
+		partialFilterExpression: { processor: { $in: ['default', 'fallback'] } }
+	}
+)
+paymentSchema.index({ correlationId: 1 }, { unique: true })
+paymentSchema.index({ processor: 1, requestedAt: 1 }, { background: true })
 
 export type PaymentRecord = mongoose.InferSchemaType<typeof paymentSchema>
 export const PaymentModel = mongoose.model<PaymentRecord>('Payments', paymentSchema)

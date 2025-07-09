@@ -137,4 +137,27 @@ describe('Payments Job Integration Tests', () => {
 
 		expect(savedPayment?.amount).toBe(0)
 	})
+
+	it('should handle duplicate payment requests (idempotency)', async () => {
+		const duplicateJob = {
+			data: {
+				correlationId: Bun.randomUUIDv7(),
+				amount: 100.0
+			}
+		} as Job<Payments.paymentJob>
+
+		// Process the same payment twice
+		const result1 = await paymentsJob(duplicateJob)
+		const result2 = await paymentsJob(duplicateJob)
+
+		// Should only have one payment in the database
+		const savedPayments = await PaymentModel.find({
+			correlationId: duplicateJob.data.correlationId
+		})
+
+		expect(savedPayments).toHaveLength(1)
+		expect(result1.success).toBe(true)
+		expect(result2.success).toBe(true)
+		expect(result2.message).toBe('Payment already processed')
+	})
 })

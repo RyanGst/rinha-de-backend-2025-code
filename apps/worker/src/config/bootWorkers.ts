@@ -6,7 +6,7 @@ const { host, port } = getRedisClient()
 
 const workerOptions: WorkerOptions = {
 	connection: { host, port },
-	concurrency: Number.parseInt(process.env.CONCURRENCY || '1', 10)
+	concurrency: Number.parseInt(process.env.CONCURRENCY || '10', 10)
 }
 
 export async function bootWorkers() {
@@ -21,8 +21,8 @@ export async function bootWorkers() {
 		worker.on('ready', () => {
 			console.log('Worker ready', worker.name)
 		})
-		worker.on('completed', (a, b) =>
-			console.log(`Worker completed ${worker.name} with result: ${JSON.stringify(a)}`)
+		worker.on('completed', (a) =>
+			console.log(`Worker completed ${worker.name} with id: ${JSON.stringify(a.data.correlationId)}`)
 		)
 	})
 }

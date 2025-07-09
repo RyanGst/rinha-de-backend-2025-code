@@ -1,13 +1,15 @@
-import { connectToDatabase } from '@repo/db'
 import { Elysia } from 'elysia'
 import logixlysia from 'logixlysia'
+import mongoose from 'mongoose'
 import { config } from './config'
 import { payments } from './modules/payments'
 import { paymentsSummary } from './modules/payments-summary'
 import purgePayments from './modules/purge-payments'
 
 async function bootstrap() {
-	await connectToDatabase()
+	await mongoose.connect(process.env.MONGODB_URI!).then(() => {
+		console.log('Connected to database')
+	})
 
 	const app = new Elysia()
 		.use(
