@@ -8,7 +8,10 @@ const paymentsJob = async (job: Job<Payments.paymentJob>) => {
 
 	const { correlationId, amount } = job.data
 
-	const [defaultHealth, fallbackHealth] = await Promise.all([service.getHealth('default'), service.getHealth('fallback')])
+	const [defaultHealth, fallbackHealth] = await Promise.all([
+		service.getHealth('default'),
+		service.getHealth('fallback')
+	])
 
 	if (defaultHealth.failing && fallbackHealth.failing) {
 		await job.changeDelay(10000)
@@ -16,7 +19,7 @@ const paymentsJob = async (job: Job<Payments.paymentJob>) => {
 
 	const processor = defaultHealth.failing ? 'fallback' : 'default'
 
-	const requestedAt =  new Date().toISOString()
+	const requestedAt = new Date().toISOString()
 	const body = { correlationId, amount, requestedAt }
 
 	const request = new Request(endpoints.payments[processor], {

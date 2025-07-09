@@ -12,6 +12,7 @@
 	"dependencies": {
 		"@repo/redis": "workspace:*",
 		"@sinclair/typebox": "^0.34.37",
+		"@repo/db": "workspace:*",
 		"bullmq": "^5.56.1",
 		"mongoose": "^8.16.2"
 	},

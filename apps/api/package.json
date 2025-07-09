@@ -7,6 +7,7 @@
 	},
 	"dependencies": {
 		"@repo/redis": "workspace:*",
+		"@repo/db": "workspace:*",
 		"bullmq": "^5.56.1",
 		"elysia": "latest",
 		"logixlysia": "^5.1.0",

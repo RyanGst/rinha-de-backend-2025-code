@@ -21,8 +21,8 @@ export async function bootWorkers() {
 		worker.on('ready', () => {
 			console.log('Worker ready', worker.name)
 		})
-		worker.on('completed', (a, b) => console.log(
-			`Worker completed ${worker.name} with result: ${JSON.stringify(a)}`
-		))
+		worker.on('completed', (a, b) =>
+			console.log(`Worker completed ${worker.name} with result: ${JSON.stringify(a)}`)
+		)
 	})
 }

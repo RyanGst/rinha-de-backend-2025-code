@@ -28,7 +28,6 @@ const paymentsSummaryService = {
 			fromDate.setTime(minDate.getTime())
 		}
 
-
 		const pipeline = [
 			{
 				$match: {

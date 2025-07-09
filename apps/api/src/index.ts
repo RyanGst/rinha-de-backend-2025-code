@@ -15,12 +15,11 @@ async function bootstrap() {
 				config: {
 					showStartupMessage: true,
 					startupMessageFormat: 'simple',
-					customLogFormat:
-					'🦊 {now} {level} {duration} {method} {pathname} {status} {message} {ip} {epoch}',
+					customLogFormat: '🦊 {now} {level} {duration} {method} {pathname} {status} {message} {ip} {epoch}',
 					timestamp: {
 						translateTime: 'yyyy-mm-dd HH:MM:ss'
 					},
-					ip: true,
+					ip: true
 				}
 			})
 		)
