@@ -1,7 +1,7 @@
+import { connectToDatabase } from '@repo/db'
 import { Elysia } from 'elysia'
 import logixlysia from 'logixlysia'
 import { config } from './config'
-import connectToDatabase from './db'
 import { payments } from './modules/payments'
 import { paymentsSummary } from './modules/payments-summary'
 import purgePayments from './modules/purge-payments'

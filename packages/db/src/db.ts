@@ -2,7 +2,7 @@ import { MongoClient } from 'mongodb'
 
 let client: MongoClient | null = null
 
-const connectToDatabase = async () => {
+export const connectToDatabase = async () => {
 	if (client) return client
 
 	client = new MongoClient(process.env.MONGODB_URI || 'mongodb://localhost:27017')

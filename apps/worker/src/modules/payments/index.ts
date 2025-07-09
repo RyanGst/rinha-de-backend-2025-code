@@ -1,6 +1,7 @@
+import { PaymentModel } from '@repo/db'
 import type { Job } from 'bullmq'
 import endpoints from '../../config/endpoint'
-import { Payments } from './model'
+import type { Payments } from './model'
 import service from './service'
 
 const paymentsJob = async (job: Job<Payments.paymentJob>) => {
@@ -30,9 +31,13 @@ const paymentsJob = async (job: Job<Payments.paymentJob>) => {
 		}
 	})
 
-	await fetch(request)
+	try {
+		await fetch(request)
+	} catch (e) {
+		console.log(e)
+	}
 
-	await Payments.PaymentModel.create({
+	await PaymentModel.create({
 		correlationId,
 		amount,
 		requestedAt,

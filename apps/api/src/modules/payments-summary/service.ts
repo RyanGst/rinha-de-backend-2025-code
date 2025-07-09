@@ -1,4 +1,5 @@
-import { PaymentsSummary } from './model'
+import { PaymentModel } from '@repo/db'
+import type { PaymentsSummary } from './model'
 
 const paymentsSummaryService = {
 	async getPaymentsSummary({
@@ -47,11 +48,11 @@ const paymentsSummaryService = {
 		]
 
 		// Diagnostic: Check if index is being used
-		const explainResult = await PaymentsSummary.PaymentModel.aggregate(pipeline).explain('executionStats')
+		const explainResult = await PaymentModel.aggregate(pipeline).explain('executionStats')
 		console.log('Aggregation execution stats:', JSON.stringify(explainResult, null, 2))
 
-		const results = await PaymentsSummary.PaymentModel.aggregate(pipeline, {
-			maxTimeMS: 30000, // 30 second timeout
+		const results = await PaymentModel.aggregate(pipeline, {
+			maxTimeMS: 10000, // 30 second timeout
 			allowDiskUse: true // Allow disk usage for large aggregations
 		})
 
