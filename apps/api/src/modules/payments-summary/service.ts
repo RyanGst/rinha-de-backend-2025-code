@@ -1,15 +1,11 @@
 import { PaymentModel } from '@repo/db'
 import { getRedisClient } from '@repo/redis'
 import type { PaymentsSummary } from './model'
+import type { SummaryResult } from './summaryResult'
 
 const { client } = getRedisClient()
 
 const SUMMARY_CACHE_TTL = 1
-
-interface SummaryResult {
-	default: { totalRequests: number; totalAmount: number }
-	fallback: { totalRequests: number; totalAmount: number }
-}
 
 export async function clearCache({ from, to }: { from?: string; to?: string } = {}) {
 	if (from && to) {
