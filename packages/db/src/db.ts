@@ -1,14 +1,13 @@
-import { MongoClient } from 'mongodb'
-
-let client: MongoClient | null = null
+import mongoose from 'mongoose'
 
 export const connectToDatabase = async () => {
-	if (client) return client
+	const uri = process.env.MONGODB_URI!
+	await mongoose.connect(uri, {
+		family: 4,
+		ssl: false
+	})
 
-	client = new MongoClient(process.env.MONGODB_URI || 'mongodb://localhost:27017')
-	await client.connect()
-
-	return client.db(process.env.MONGO_DB || 'rinha-ryangst')
+	console.log('Connected to database')
 }
 
 export default connectToDatabase

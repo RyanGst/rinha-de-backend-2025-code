@@ -1,8 +1,9 @@
 import { afterAll, afterEach, beforeAll, beforeEach, describe, expect, it } from 'bun:test'
+import { PaymentModel } from '@repo/db'
 import type { Job } from 'bullmq'
 import * as mongoose from 'mongoose'
 import paymentsJob from './index'
-import { Payments } from './model'
+import type { Payments } from './model'
 
 describe('Payments Job Integration Tests', () => {
 	let testJob: Job<Payments.paymentJob>
@@ -13,7 +14,7 @@ describe('Payments Job Integration Tests', () => {
 
 	beforeEach(async () => {
 		// Clear the database
-		await Payments.PaymentModel.deleteMany({})
+		await PaymentModel.deleteMany({})
 
 		// Create a test job
 		testJob = {
@@ -26,7 +27,7 @@ describe('Payments Job Integration Tests', () => {
 
 	afterEach(async () => {
 		// Clean up
-		await Payments.PaymentModel.deleteMany({})
+		await PaymentModel.deleteMany({})
 	})
 
 	afterAll(async () => {
@@ -37,7 +38,7 @@ describe('Payments Job Integration Tests', () => {
 		await paymentsJob(testJob)
 
 		// Verify payment was saved to database
-		const savedPayment = await Payments.PaymentModel.findOne({
+		const savedPayment = await PaymentModel.findOne({
 			correlationId: testJob.data.correlationId
 		})
 
@@ -52,7 +53,7 @@ describe('Payments Job Integration Tests', () => {
 		// In a real scenario, you'd need to stop the default processor container
 		await paymentsJob(testJob)
 
-		const savedPayment = await Payments.PaymentModel.findOne({
+		const savedPayment = await PaymentModel.findOne({
 			correlationId: testJob.data.correlationId
 		})
 
@@ -77,7 +78,7 @@ describe('Payments Job Integration Tests', () => {
 
 		await Promise.all([paymentsJob(job1), paymentsJob(job2)])
 
-		const savedPayments = await Payments.PaymentModel.find({
+		const savedPayments = await PaymentModel.find({
 			correlationId: { $in: [job1.data.correlationId, job2.data.correlationId] }
 		})
 
@@ -96,7 +97,7 @@ describe('Payments Job Integration Tests', () => {
 
 		await paymentsJob(largeAmountJob)
 
-		const savedPayment = await Payments.PaymentModel.findOne({
+		const savedPayment = await PaymentModel.findOne({
 			correlationId: largeAmountJob.data.correlationId
 		})
 
@@ -113,7 +114,7 @@ describe('Payments Job Integration Tests', () => {
 
 		await paymentsJob(smallAmountJob)
 
-		const savedPayment = await Payments.PaymentModel.findOne({
+		const savedPayment = await PaymentModel.findOne({
 			correlationId: smallAmountJob.data.correlationId
 		})
 
@@ -130,7 +131,7 @@ describe('Payments Job Integration Tests', () => {
 
 		await paymentsJob(zeroAmountJob)
 
-		const savedPayment = await Payments.PaymentModel.findOne({
+		const savedPayment = await PaymentModel.findOne({
 			correlationId: zeroAmountJob.data.correlationId
 		})
 

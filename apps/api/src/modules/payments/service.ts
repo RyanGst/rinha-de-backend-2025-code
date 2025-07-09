@@ -1,12 +1,5 @@
-import { getRedisClient, queueName } from '@repo/redis'
-import { Queue } from 'bullmq'
 import type { Payments } from './model'
-
-const { host, port } = getRedisClient()
-
-const paymentsQueue = new Queue(queueName.payments, {
-	connection: { host, port }
-})
+import { paymentsQueue } from './paymentsQueue'
 
 const paymentsService = {
 	async dispatchPayment(payment: Payments.paymentBody) {

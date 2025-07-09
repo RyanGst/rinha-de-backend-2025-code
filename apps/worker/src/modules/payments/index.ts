@@ -5,49 +5,59 @@ import type { Payments } from './model'
 import service from './service'
 
 const paymentsJob = async (job: Job<Payments.paymentJob>) => {
-	console.log('Processing payment', job.data)
+	console.log('Processing payment', job.data.correlationId)
 
 	const { correlationId, amount } = job.data
-
-	const [defaultHealth, fallbackHealth] = await Promise.all([
-		service.getHealth('default'),
-		service.getHealth('fallback')
-	])
-
-	if (defaultHealth.failing && fallbackHealth.failing) {
-		await job.changeDelay(10000)
-	}
-
-	const processor = defaultHealth.failing ? 'fallback' : 'default'
-
 	const requestedAt = new Date().toISOString()
-	const body = { correlationId, amount, requestedAt }
+	const body = { correlationId, amount, requestedAt, processor: 'default' }
 
-	const request = new Request(endpoints.payments[processor], {
-		method: 'POST',
-		body: JSON.stringify(body),
-		headers: {
-			'Content-Type': 'application/json'
-		}
-	})
+	console.log('PaymentModel', PaymentModel.collection.name)
 
 	try {
-		await fetch(request)
+		await PaymentModel.create(body)
+		console.log('Payment created', body)
 	} catch (e) {
-		console.log(e)
+		console.log('Error creating payment', e)
 	}
 
-	await PaymentModel.create({
-		correlationId,
-		amount,
-		requestedAt,
-		processor
-	})
+	// let processor = 'default'
 
-	return {
-		success: true,
-		message: 'Payment processed successfully'
-	}
+	// try {
+	//     const [defaultHealth, fallbackHealth] = await Promise.all([
+	//         service.getHealth('default'),
+	//         service.getHealth('fallback')
+	//     ])
+
+	//     if (defaultHealth.failing && fallbackHealth.failing) {
+	//         await job.changeDelay(10000)
+	//     }
+
+	//     processor = defaultHealth.failing ? 'fallback' : 'default'
+
+	//     await fetch(endpoints.payments[defaultHealth.failing ? 'fallback' : 'default'], {
+	//         method: 'POST',
+	//         body: JSON.stringify(body),
+	//         headers: {
+	//             'Content-Type': 'application/json'
+	//         }
+	//     })
+	// } catch (e) {
+	//     console.log(e)
+	// } finally {
+
+	//     await PaymentModel.create({
+	//         correlationId,
+	//         amount,
+	//         requestedAt,
+	//         processor
+	//     })
+
+	// }
+
+	// return {
+	//     success: true,
+	//     message: 'Payment processed successfully'
+	// }
 }
 
 export default paymentsJob

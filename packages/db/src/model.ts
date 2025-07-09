@@ -18,4 +18,4 @@ const paymentSchema = new mongoose.Schema<_PaymentRecord>({
 paymentSchema.index({ requestedAt: 1, processor: 1 })
 
 export type PaymentRecord = mongoose.InferSchemaType<typeof paymentSchema>
-export const PaymentModel = mongoose.model<PaymentRecord>('Payment', paymentSchema)
+export const PaymentModel = mongoose.model<PaymentRecord>('Payments', paymentSchema)

@@ -1,7 +1,8 @@
 import { Elysia, StatusMap, status } from 'elysia'
+import { paymentsQueue } from '../payments/paymentsQueue'
 
 const purgePayments = new Elysia({ prefix: '/purge-payments' }).post('/', async (ctx) => {
-	console.log('PURGE PAYMENTS - not implemented')
+	await paymentsQueue.obliterate({ force: true })
 	return status(StatusMap.OK, 'Purge payments')
 })
 
