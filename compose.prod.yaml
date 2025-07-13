@@ -60,9 +60,7 @@ services:
           memory: "110MB"
 
   api:
-    build:
-      context: .
-      dockerfile: apps/api/Dockerfile
+    image: ghcr.io/ryangst/rinha-backend-api:latest
     env_file: .env
     container_name: api-rinha
     depends_on:
@@ -82,9 +80,7 @@ services:
           memory: "60MB"
 
   api-2:
-    build:
-      context: .
-      dockerfile: apps/api/Dockerfile
+    image: ghcr.io/ryangst/rinha-backend-api:latest
     container_name: api-rinha-2
     env_file: .env
     environment:
@@ -106,9 +102,7 @@ services:
           memory: "60MB"
 
   worker:
-    build:
-      context: .
-      dockerfile: apps/worker/Dockerfile
+    image: ghcr.io/ryangst/rinha-backend-worker:latest
     env_file: .env
     container_name: worker-rinha
     depends_on:

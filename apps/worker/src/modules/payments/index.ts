@@ -5,12 +5,10 @@ import service from './service'
 
 const paymentsJob = async (job: Job<Payments.paymentJob>) => {
 	const { correlationId, amount } = job.data
-	console.log('Processing payment', correlationId)
 
 	const existingPayment = await PaymentModel.findOne({ correlationId })
 
 	if (existingPayment) {
-		console.log('Payment already processed', correlationId)
 		return {
 			success: true,
 			message: 'Payment already processed',
@@ -32,8 +30,6 @@ const paymentsJob = async (job: Job<Payments.paymentJob>) => {
 			requestedAt: processedAt,
 			processor
 		})
-
-		console.log('Payment processed and saved')
 
 		return {
 			success: true,
