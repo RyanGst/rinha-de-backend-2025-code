@@ -41,8 +41,8 @@ jobs:
           file: apps/api/Dockerfile
           push: true
           tags: |
-            ghcr.io/${{ OWNER_LC }}/rinha-backend-api:latest
-            ghcr.io/${{ OWNER_LC }}/rinha-backend-api:${{ github.sha }}
+            ghcr.io/${{ env.OWNER_LC }}/rinha-backend-api:latest
+            ghcr.io/${{ env.OWNER_LC }}/rinha-backend-api:${{ github.sha }}
 
       - name: Build and push worker image
         uses: docker/build-push-action@v5
@@ -51,5 +51,5 @@ jobs:
           file: apps/worker/Dockerfile
           push: true
           tags: |
-            ghcr.io/${{ OWNER_LC }}/rinha-backend-worker:latest
-            ghcr.io/${{ OWNER_LC }}/rinha-backend-worker:${{ github.sha }}
+            ghcr.io/${{ env.OWNER_LC }}/rinha-backend-worker:latest
+            ghcr.io/${{ env.OWNER_LC }}/rinha-backend-worker:${{ github.sha }}
