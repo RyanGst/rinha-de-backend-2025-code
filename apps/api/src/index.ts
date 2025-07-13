@@ -6,9 +6,17 @@ import { paymentsSummary } from './modules/payments-summary'
 import purgePayments from './modules/purge-payments'
 
 async function bootstrap() {
-	await mongoose.connect(process.env.MONGODB_URI!).then(() => {
-		console.log('Connected to database')
-	})
+	await mongoose
+		.connect(process.env.MONGODB_URI!, {
+			maxPoolSize: 30,
+			minPoolSize: 5,
+			keepAliveInitialDelay: 300_000,
+			socketTimeoutMS: 30_000,
+			serverSelectionTimeoutMS: 5_000
+		})
+		.then(() => {
+			console.log('Connected to database')
+		})
 
 	const app = new Elysia().use(payments).use(paymentsSummary).use(purgePayments).listen(config.port)
 
