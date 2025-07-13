@@ -10,20 +10,42 @@ on:
   workflow_dispatch:
 
 jobs:
-  build-and-start:
+  build-and-publish:
     runs-on: ubuntu-latest
+    permissions:
+      packages: write  # allow pushing to ghcr.io
+      contents: read
+
     steps:
       - uses: actions/checkout@v3
 
-      - name: Setup env files
-        run: cp .env.example .env
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
 
-      - name: Start all services
-        run: docker compose up -d
+      - name: Log in to GitHub Container Registry
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
 
-      - run: docker compose exec -T api bun test
-      - run: docker compose exec -T worker bun test
-      - name: Cleanup
-        if: always()
-        run: docker compose down -v
+      - name: Build and push api image
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          file: apps/api/Dockerfile
+          push: true
+          tags: |
+            ghcr.io/${{ github.repository_owner }}/rinha-backend-api:latest
+            ghcr.io/${{ github.repository_owner }}/rinha-backend-api:${{ github.sha }}
+
+      - name: Build and push worker image
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          file: apps/worker/Dockerfile
+          push: true
+          tags: |
+            ghcr.io/${{ github.repository_owner }}/rinha-backend-worker:latest
+            ghcr.io/${{ github.repository_owner }}/rinha-backend-worker:${{ github.sha }}
         
